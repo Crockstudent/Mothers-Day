@@ -1,0 +1,90 @@
+let flowers = []; // set an array for flowers
+let gridSpacingX; // spacing between flowers in the x direction
+let gridSpacingY; // spacing between flowers in the y direction
+let flowersPerRow = 6; // number of flowers per row
+let flowersPerColumn = 8; // number of flowers per column
+
+function setup() {
+  createCanvas(windowWidth, windowHeight); // takes up the whole page
+  textSize(40); // sets up the size of the text
+  background(255); // Set background color in setup
+  gridSpacingX = width / (flowersPerRow + 1); // calculate spacing between flowers in the x direction
+  gridSpacingY = height / (flowersPerColumn + 1); // calculate spacing between flowers in the y direction
+  generateFlowers(); // Generate flowers on the grid
+}
+
+function draw() {
+  // Display all flowers
+  for (let i = 0; i < flowers.length; i++) {
+    flowers[i].display();
+  }
+  fill(255,0,0);
+  text("Happy Mother's Day!", width / 3, height / 2);
+}
+
+// Generate flowers on the grid
+function generateFlowers() {
+  for (let x = gridSpacingX; x < width; x += gridSpacingX) {
+    for (let y = gridSpacingY; y < height; y += gridSpacingY) {
+      let flower = new Flower(x, y);
+      flowers.push(flower);
+    }
+  }
+}
+
+class Flower {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    noStroke();
+    // Set color mode to HSB
+    colorMode(HSB, 360, 100, 100);
+
+    // Assign random colors to each type of petal
+    this.outerPetalColor = color(random(0, 360), random(50, 100), random(50, 100)); // HSB color for outer petals
+    this.middlePetalColor = color(random(0, 360), random(50, 100), random(50, 100)); // HSB color for middle petals
+    this.innerPetalColor = color(random(0, 360), random(50, 100), random(50, 100)); // HSB color for inner petals
+
+    this.outerPetalCount = int(6); // number of outer petals
+    this.middlePetalCount = int(6); // number of middle petals
+    this.innerPetalCount = int(6); // number of inner petals
+    this.outerPetalLength = 15; // length of petals for outer circle
+    this.middlePetalLength = 15; // length of petals for middle circle
+    this.innerPetalLength = 15; // length of petals for inner circle
+    this.centerSize = random(5, 15); // size of the center
+    this.petalSize = 15; // Set a fixed size for all petals
+  }
+
+  display() {
+    // Draw outer petals
+    fill(this.outerPetalColor);
+    for (let i = 0; i < this.outerPetalCount; i++) {
+      let angle = map(i, 0, this.outerPetalCount, 0, TWO_PI);
+      let xOff = cos(angle) * (this.outerPetalLength * 1.1); // Move outer petals slightly closer to the center
+      let yOff = sin(angle) * (this.outerPetalLength * 1.1); // Move outer petals slightly closer to the center
+      ellipse(this.x + xOff, this.y + yOff, this.petalSize, this.petalSize);
+    }
+
+    // Draw middle petals
+    fill(this.middlePetalColor);
+    for (let i = 0; i < this.middlePetalCount; i++) {
+      let angle = map(i, 0, this.middlePetalCount, 0, TWO_PI);
+      let xOff = cos(angle) * (this.middlePetalLength * 0.75); // Petals between outer and inner petals
+      let yOff = sin(angle) * (this.middlePetalLength * 0.75); // Petals between outer and inner petals
+      ellipse(this.x + xOff, this.y + yOff, this.petalSize, this.petalSize);
+    }
+
+    // Draw inner petals
+    fill(this.innerPetalColor);
+    for (let i = 0; i < this.innerPetalCount; i++) {
+      let angle = map(i, 0, this.innerPetalCount, 0, TWO_PI);
+      let xOff = cos(angle) * (this.innerPetalLength * 0.5); // Move petals closer to the center
+      let yOff = sin(angle) * (this.innerPetalLength * 0.5); // Move petals closer to the center
+      ellipse(this.x + xOff, this.y + yOff, this.petalSize, this.petalSize);
+    }
+
+    // Draw center
+    fill(60, 100, 100); // Bright yellow center
+    ellipse(this.x, this.y, this.centerSize, this.centerSize);
+  }
+}
